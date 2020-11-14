@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
     private void doInitialization() {
         activityMainBinding.tvShowRecyclerView.setHasFixedSize(true);
         viewModel = new ViewModelProvider(this).get(MostPopularTVShowsViewModel.class);
-        tvShowsAdapter = new TVShowsAdapter(tvShows , this);
+        tvShowsAdapter = new TVShowsAdapter(tvShows, this);
         activityMainBinding.tvShowRecyclerView.setAdapter(tvShowsAdapter);
         activityMainBinding.tvShowRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
                 }
             }
         });
+        activityMainBinding.imageWatchlist.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), WatchlistActivity.class)));
         getMostPopularTVShows();
     }
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
                 if (mostPopularTVShowsResponse.getTvShows() != null) {
                     int oldCount = tvShows.size();
                     tvShows.addAll(mostPopularTVShowsResponse.getTvShows());
-                    tvShowsAdapter.notifyItemRangeInserted(oldCount , tvShows.size());
+                    tvShowsAdapter.notifyItemRangeInserted(oldCount, tvShows.size());
                 }
             }
 
@@ -75,28 +76,16 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
 
     private void toggleLoading() {
         if (currentPage == 1) {
-            if (activityMainBinding.getIsLoading() != null && activityMainBinding.getIsLoading()){
-                activityMainBinding.setIsLoading(false);
-            }else {
-                activityMainBinding.setIsLoading(true);
-            }
+            activityMainBinding.setIsLoading(activityMainBinding.getIsLoading() == null || !activityMainBinding.getIsLoading());
         } else {
-            if (activityMainBinding.getIsLoadingMore() != null && activityMainBinding.getIsLoadingMore()){
-                activityMainBinding.setIsLoadingMore(false);
-            }else {
-                activityMainBinding.setIsLoadingMore(true);
-            }        }
+            activityMainBinding.setIsLoadingMore(activityMainBinding.getIsLoadingMore() == null || !activityMainBinding.getIsLoadingMore());
+        }
     }
 
     @Override
     public void onTvShowClicked(TVShow tvShow) {
-        Intent intent = new Intent(getApplicationContext() , TVShowDetailsActivity.class);
-        intent.putExtra("id" , tvShow.getId());
-        intent.putExtra("name" , tvShow.getName());
-        intent.putExtra("startDate" , tvShow.getStartDate());
-        intent.putExtra("country",tvShow.getCountry());
-        intent.putExtra("network",tvShow.getNetwork());
-        intent.putExtra("status",tvShow.getStatus());
+        Intent intent = new Intent(getApplicationContext(), TVShowDetailsActivity.class);
+        intent.putExtra("tvShow", tvShow);
         startActivity(intent);
 
     }

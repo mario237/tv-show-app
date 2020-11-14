@@ -1,22 +1,35 @@
 package com.mario.tvshows.viewmodels;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
+import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+
+import com.mario.tvshows.database.TVShowsDatabase;
+import com.mario.tvshows.models.TVShow;
 import com.mario.tvshows.repositories.TVShowDetailsRepository;
 import com.mario.tvshows.responses.TVShowDetailsResponse;
-import com.mario.tvshows.responses.TVShowResponse;
 
-public class TVShowDetailsViewModel extends ViewModel {
+import io.reactivex.Completable;
+
+public class TVShowDetailsViewModel extends AndroidViewModel {
 
     private TVShowDetailsRepository tvShowDetailsRepository;
+    private TVShowsDatabase tvShowsDatabase;
 
-    public TVShowDetailsViewModel() {
+    public TVShowDetailsViewModel(@NonNull Application application) {
+        super(application);
         tvShowDetailsRepository = new TVShowDetailsRepository();
+        tvShowsDatabase = TVShowsDatabase.getTvShowsDatabase(application);
     }
 
-    public LiveData<TVShowDetailsResponse> getTVShowDetails (String tvShowId){
+    public LiveData<TVShowDetailsResponse> getTVShowDetails(String tvShowId) {
         return tvShowDetailsRepository.getTVShowDetails(tvShowId);
+    }
+
+    public Completable addToWatchlist(TVShow tvShow) {
+        return tvShowsDatabase.tvShowDao().addToWatchlist(tvShow);
     }
 
 }
