@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
             }
         });
         activityMainBinding.imageWatchlist.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), WatchlistActivity.class)));
+        activityMainBinding.imageSearch.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SearchActivity.class)));
+
         getMostPopularTVShows();
     }
 
@@ -76,9 +78,18 @@ public class MainActivity extends AppCompatActivity implements TVShowsListener {
 
     private void toggleLoading() {
         if (currentPage == 1) {
-            activityMainBinding.setIsLoading(activityMainBinding.getIsLoading() == null || !activityMainBinding.getIsLoading());
+            if (activityMainBinding.getIsLoading() != null && activityMainBinding.getIsLoading()){
+                activityMainBinding.setIsLoading(false);
+            }else {
+                activityMainBinding.setIsLoading(true);
+            }
+
         } else {
-            activityMainBinding.setIsLoadingMore(activityMainBinding.getIsLoadingMore() == null || !activityMainBinding.getIsLoadingMore());
+            if (activityMainBinding.getIsLoadingMore() != null && activityMainBinding.getIsLoadingMore()){
+                activityMainBinding.setIsLoadingMore(false);
+            }else {
+                activityMainBinding.setIsLoadingMore(true);
+            }
         }
     }
 
